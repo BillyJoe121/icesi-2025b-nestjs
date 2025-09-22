@@ -9,12 +9,14 @@ import {v4 as uuid} from 'uuid';
 import { CreateCarDto } from './dto/create-car.dto';
 import { Car } from './entities/car.entity';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { BrandsService } from 'src/brands/brands.service';
 
 @Injectable()
 export class CarsService {
   
   constructor(
-    @InjectRepository(Car) private readonly carRepository: Repository<Car>
+    @InjectRepository(Car) private readonly carRepository: Repository<Car>, 
+    private readonly brandService: BrandsService,
   ){}
 
 
@@ -33,9 +35,14 @@ export class CarsService {
 
   async  create(car: CreateCarDto): Promise<Car> {
 
-    let carNew = await this.carRepository.save(car);
+    const brand = await this.brandService.findOne(car.brand);
+    if(brand == null) throw new NotFoundException(`brand with id: ${car.brand} not found`);
 
-    return carNew;
+    const carObj = Object.assign(car, {brand}); 
+
+    const carNew: Car = this.carRepository.create(carObj)
+    
+    return this.carRepository.save(carNew);
   }
 
   async  update(id: string, car: UpdateCarDto): Promise<Car> {
