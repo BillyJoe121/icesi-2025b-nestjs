@@ -5,6 +5,10 @@ import { CarsModule } from './cars/cars.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandsModule } from './brands/brands.module';
+import { AuthModule } from './auth/auth.module';
+import { Car } from './cars/entities/car.entity';
+import { Brand } from './brands/entities/brand.entity';
+import { User } from './auth/entities/user.entity';
 
 @Module({
   imports: [
@@ -17,10 +21,12 @@ import { BrandsModule } from './brands/brands.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
-      autoLoadEntities: true
+      entities: [Car, Brand, User],
+      //autoLoadEntities: true
     }),
     CarsModule,
-    BrandsModule
+    BrandsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
