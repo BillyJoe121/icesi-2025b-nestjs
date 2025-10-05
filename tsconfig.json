@@ -1,25 +1,40 @@
+// ========================================================================================
+// ARCHIVO: tsconfig.json
+// PROPÓSITO: Configurar el compilador de TypeScript (TSC). Define cómo se compila,
+//            qué características del lenguaje se permiten y dónde se encuentra el código.
+// ========================================================================================
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    // --- Configuración del Módulo y Resolución ---
+    "module": "nodenext", // Usa el sistema de módulos más moderno de Node.js.
+    "moduleResolution": "nodenext", // Cómo TypeScript busca los módulos. 'nodenext' es el estándar actual.
+    "resolvePackageJsonExports": true, // Permite que TypeScript entienda el campo "exports" en package.json.
+    "esModuleInterop": true, // Mejora la compatibilidad entre módulos CommonJS (require) y ES Modules (import).
+    "isolatedModules": true, // Asegura que cada archivo se pueda compilar por separado, mejorando el rendimiento.
+    // --- Salida de la Compilación ---
+    "declaration": true, // Genera archivos de definición de tipos (.d.ts) junto con el JavaScript.
+    "removeComments": true, // Elimina los comentarios del código JavaScript compilado.
+    "outDir": "./dist", // Carpeta donde se guardarán TODOS los archivos .js compilados.
+    "sourceMap": true, // Genera archivos .map que conectan el .js compilado con tu .ts original. Esencial para depurar.
+    // --- Decoradores y Metadatos (¡CRÍTICOS PARA NESTJS!) ---
+    // ⚠️ ERROR TRAMPA #1: Si estas dos líneas faltan o están en `false`, NestJS NO FUNCIONARÁ.
+    // Los decoradores (@Injectable, @Controller) no se procesarán y la inyección de dependencias fallará.
+    "emitDecoratorMetadata": true, // Guarda información sobre los tipos de las propiedades y parámetros decorados.
+    "experimentalDecorators": true, // Habilita el uso de la sintaxis de decoradores (@).
+    // --- Rutas y Comodidad ---
+    "baseUrl": "./", // Establece el directorio base para las rutas. Permite importaciones absolutas desde la raíz (ej: 'src/cars/cars.module').
+    "allowSyntheticDefaultImports": true, // Permite importar módulos que usan `module.exports` como si tuvieran un `export default`.
+    // --- Versión del Lenguaje y Chequeos de Calidad ---
+    "target": "ES2023", // La versión de JavaScript a la que se compilará el código.
+    "incremental": true, // Acelera compilaciones futuras guardando información sobre la última compilación.
+    "skipLibCheck": true, // Evita la verificación de tipos en los archivos de declaración (.d.ts) de las dependencias, acelerando la compilación.
+    // ⚠️ ERROR TRAMPA #2: Si "strictNullChecks" se pone en `false`, TypeScript será más permisivo con `null` y `undefined`,
+    // lo que puede ocultar errores que aparecerían en tiempo de ejecución. El profesor podría cambiarlo.
+    "strictNullChecks": true, // Obliga a manejar explícitamente los casos donde una variable puede ser `null` o `undefined`.
+    "forceConsistentCasingInFileNames": true, // Evita errores de importación en sistemas operativos que no distinguen mayúsculas/minúsculas.
+    // Estas son opciones de "calidad de código". El profesor podría activarlas (`true`) para forzarte a escribir un código más estricto.
+    "noImplicitAny": false, // `false` permite variables sin un tipo explícito (se asume `any`). Si fuera `true`, te obligaría a tipar todo.
+    "strictBindCallApply": false, // `false` es menos estricto al usar los métodos .bind, .call y .apply.
+    "noFallthroughCasesInSwitch": false // `false` permite que los casos de un `switch` no tengan `break`.
   }
 }

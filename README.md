@@ -1,3 +1,232 @@
+Cómo Evitar el Reemplazo Indiscriminado
+Cuando usas el método de Buscar y Reemplazar (Ctrl + H en Windows/Linux o Cmd + Option + F en Mac), tienes unas pequeñas opciones para controlar exactamente cómo se hace la búsqueda.
+
+Abre el menú de Buscar y Reemplazar con Ctrl + H.
+
+Ingresa el texto a buscar (ej: car) y el texto de reemplazo (ej: book).
+
+Ahora, fíjate en los iconos que están a la derecha del campo de búsqueda:
+
+Aa (Match Case): Este es el que necesitas. Haz clic en este icono para activarlo. Cuando está azul (activado), la búsqueda distinguirá entre mayúsculas y minúsculas. Solo encontrará car, ignorando por completo Car.
+
+[ab] (Match Whole Word): También muy recomendado. Activa este icono para que solo encuentre la palabra completa. Así, si buscas car, no intentará reemplazar la palabra carton o carry.
+
+Pasos para el Reemplazo Seguro:
+
+Presiona Ctrl + H.
+
+Escribe la palabra en minúsculas que quieres cambiar (ej: car).
+
+Escribe el reemplazo en minúsculas (ej: book).
+
+Activa el icono Aa (Match Case).
+
+Activa el icono [ab] (Match Whole Word).
+
+Haz clic en "Replace All".
+
+Repite el proceso para la versión con mayúscula:
+
+Buscar: Car
+
+Reemplazar: Book
+
+Asegúrate de que Aa y [ab] sigan activados.
+
+Haz clic en "Replace All".
+
+Recordatorio del Método Más Seguro
+Recuerda que el primer método que te mencioné, "Cambiar todas las ocurrencias" (Ctrl + F2 o Cmd + F2), generalmente evita este problema. Como es contextual, si haces clic en la variable car, solo seleccionará las otras variables car, y si haces clic en la clase Car, solo seleccionará las otras clases Car.
+
+
+
+
+
+# Título del Proyecto (Ej: API de Concesionario - NestJS)
+
+> Una breve descripción de 1 o 2 líneas sobre lo que hace el proyecto. Por ejemplo: "Una API RESTful construida con NestJS, TypeORM y PostgreSQL para gestionar un concesionario de vehículos, incluyendo módulos para carros, marcas y autenticación de usuarios."
+
+## Características Principales ✨
+
+  * **CRUD Completo:** Endpoints para Crear, Leer, Actualizar y Eliminar para los módulos de `Cars` y `Brands`.
+  * **Autenticación y Autorización:** Sistema de registro y login basado en JWT (JSON Web Tokens) con protección de rutas y roles.
+  * **Validación de Datos:** Uso de DTOs y `class-validator` para asegurar que los datos de entrada sean correctos y seguros.
+  * **Paginación:** Capacidad de paginar los resultados en los listados para un rendimiento eficiente.
+  * **Base de Datos Relacional:** Uso de TypeORM para gestionar las relaciones entre carros y marcas.
+  * **Entorno Dockerizado:** Configuración con Docker Compose para levantar la base de datos PostgreSQL y PgAdmin con un solo comando.
+
+-----
+
+## 1\. Prerrequisitos 📋
+
+Antes de comenzar, asegúrate de tener instalado lo siguiente en tu sistema:
+
+  * [Node.js](https://nodejs.org/) (se recomienda v18 o superior)
+  * [Yarn](https://yarnpkg.com/) (o puedes adaptar los comandos a `npm` o `pnpm`)
+  * [Docker](https://www.docker.com/products/docker-desktop/) y Docker Compose
+
+-----
+
+## 2\. Configuración del Entorno ⚙️
+
+Este es el paso más importante y el que más a menudo se olvida en los README.
+
+1.  **Clonar el repositorio:**
+
+    ```bash
+    git clone https://URL_DE_TU_REPOSITORIO.git
+    cd nombre-del-directorio
+    ```
+
+2.  **Instalar dependencias:**
+
+    ```bash
+    yarn install
+    ```
+
+3.  **Configurar las Variables de Entorno:**
+    Este proyecto utiliza un archivo `.env` para gestionar las variables de entorno. Crea una copia del archivo `.env.example` (¡deberías crear este archivo\!) y renómbrala a `.env`.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Luego, llena el archivo `.env` con los valores correspondientes. Un `.env.example` se vería así:
+
+    ```
+    # Archivo .env.example
+
+    # Configuración de la Aplicación
+    PORT=3000
+
+    # Configuración de la Base de Datos (coincide con docker-compose.yaml)
+    DB_PORT=5432
+    DB_HOST=localhost
+    DB_NAME=car_dealership
+    DB_USERNAME=postgres
+    DB_PASSWORD=hola1234
+
+    # Configuración de JWT
+    JWT_SECRET=ESTE_ES_UN_SECRETO_MUY_SEGURO
+    JWT_EXPIRES_IN=2h
+    ```
+
+    > **Tip:** Explica que estas variables son cruciales y deben coincidir con las de `docker-compose.yaml`.
+
+-----
+
+## 3\. Ejecución del Proyecto 🚀
+
+1.  **Levantar la Base de Datos con Docker:**
+    Este comando iniciará los contenedores de PostgreSQL y PgAdmin en segundo plano.
+
+    ```bash
+    docker-compose up -d
+    ```
+
+      * La base de datos estará disponible en `localhost:5432`.
+      * Puedes acceder a PgAdmin en `http://localhost:8888`.
+
+2.  **Iniciar la aplicación NestJS en modo de desarrollo:**
+    Este comando inicia el servidor y lo reiniciará automáticamente cada vez que guardes un cambio en el código.
+
+    ```bash
+    yarn start:dev
+    ```
+
+¡Listo\! La aplicación estará corriendo en `http://localhost:3000`.
+
+-----
+
+## 4\. Documentación de la API (Endpoints) 📚
+
+Esta sección es **oro puro** para quien use tu API. Documenta cada endpoint, qué datos espera y qué devuelve. Puedes usar una herramienta como Postman o Insomnia para probarlos.
+
+### Módulo de Autenticación (`/auth`)
+
+  * **`POST /auth/register`**: Registra un nuevo usuario.
+
+      * **Body (raw, JSON):**
+        ```json
+        {
+          "firstname": "Joseph",
+          "email": "test@example.com",
+          "password": "Password12345"
+        }
+        ```
+
+  * **`POST /auth/login`**: Inicia sesión y devuelve un token JWT.
+
+      * **Body (raw, JSON):**
+        ```json
+        {
+          "email": "test@example.com",
+          "password": "Password12345"
+        }
+        ```
+      * **Respuesta Exitosa:**
+        ```json
+        {
+          "user_id": "...",
+          "email": "test@example.com",
+          "token": "ey..."
+        }
+        ```
+
+### Módulo de Marcas (`/brands`)
+
+  * **`POST /brands`**: Crea una nueva marca.
+  * **`GET /brands?limit=10&offset=0`**: Obtiene un listado paginado de marcas.
+  * **`GET /brands/:term`**: Busca una marca por `id`, `name` o `slug`.
+  * **`PATCH /brands/:id`**: Actualiza una marca.
+  * **`DELETE /brands/:id`**: Elimina una marca.
+
+### Módulo de Carros (`/cars`)
+
+  * **`POST /cars`**: Crea un nuevo carro.
+      * **Body (raw, JSON):**
+        ```json
+        {
+          "brand": "toyota", // Puede ser el nombre, slug o ID de una marca existente
+          "model": "Corolla",
+          "year": 2020
+        }
+        ```
+  * **`GET /cars`**: Obtiene un listado de todos los carros.
+  * **`GET /cars/:id`**: Busca un carro por su `id`.
+  * ... (y así con los demás endpoints)
+
+> **Tip:** Para las rutas protegidas, indica que se debe enviar el `token` en el header `Authorization` como `Bearer <token>`.
+
+-----
+
+## 5\. Ejecución de Pruebas 🧪
+
+Para asegurar la calidad del código, puedes ejecutar las pruebas unitarias y end-to-end.
+
+  * **Ejecutar todas las pruebas unitarias:**
+
+    ```bash
+    yarn test
+    ```
+
+  * **Ejecutar pruebas y ver el reporte de cobertura:**
+
+    ```bash
+    yarn test:cov
+    ```
+
+  * **Ejecutar las pruebas End-to-End:**
+    (Asegúrate de que la base de datos esté corriendo)
+
+    ```bash
+    yarn test:e2e
+    ```
+
+
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

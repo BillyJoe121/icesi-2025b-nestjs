@@ -1,25 +1,45 @@
+# ========================================================================================
+# ARCHIVO: docker-compose.yaml
+# PROPÓSITO: Definir y orquestar los servicios (contenedores) necesarios para que la
+#            aplicación funcione en un entorno de desarrollo aislado y reproducible.
+# ========================================================================================
 
 services:
+  # Define el servicio de la base de datos.
   db:
-    image: postgres:17.3
-    restart: always
+    image: postgres:17.3 # La imagen de Docker que se usará (PostgreSQL versión 17.3).
+    restart: always # Si el contenedor se detiene, Docker intentará reiniciarlo siempre.
     ports:
+      # Mapea un puerto de tu máquina (HOST) al puerto del contenedor (CONTAINER).
+      # "${DB_PORT}:5432" -> El puerto 5432 del contenedor será accesible en tu máquina
+      # a través del puerto definido en la variable de entorno DB_PORT.
       - "${DB_PORT}:5432"
     environment:
+      # Variables de entorno que se pasan al contenedor de PostgreSQL.
+      # Son necesarias para inicializar la base de datos.
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    container_name: car_dealership
+    container_name: car_dealership # Un nombre amigable para el contenedor.
     volumes:
+      # Monta un volumen para persistir los datos de la base de datos.
+      # `./postgres-data:/var/lib/postgresql/data` -> La carpeta de datos de PostgreSQL dentro
+      # del contenedor se guarda en una carpeta `./postgres-data` en tu proyecto.
+      # ⚠️ ¡CRUCIAL! Sin esto, perderías todos los datos de la BD cada vez que reinicies el contenedor.
       - ./postgres-data:/var/lib/postgresql/data
 
+  # Define el servicio de PgAdmin, una interfaz web para gestionar la base de datos.
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
     restart: always
     ports:
+      # El puerto 80 de PgAdmin será accesible en el puerto 8888 de tu máquina.
+      # Podrás acceder a PgAdmin en http://localhost:8888
       - "8888:80"
     environment:
+      # Credenciales para acceder a la interfaz de PgAdmin.
       PGADMIN_DEFAULT_EMAIL: leobusta@gmail.com
       PGADMIN_DEFAULT_PASSWORD: hola1234
     volumes:
+      # Persiste los datos de configuración de PgAdmin (servidores guardados, etc.).
       - ./pgadmin-data:/var/lib/pgadmin

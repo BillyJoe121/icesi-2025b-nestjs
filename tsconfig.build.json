@@ -1,4 +1,19 @@
+// ========================================================================================
+// ARCHIVO: tsconfig.build.json
+// PROPÓSITO: Extender la configuración principal de TypeScript para especificar qué archivos
+//            deben ser EXCLUIDOS al crear la versión final (build) de la aplicación.
+// ========================================================================================
 {
+  // "extends": Le dice a TypeScript que primero cargue TODA la configuración de "tsconfig.json".
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  // "exclude": Define una lista de archivos y carpetas que el compilador debe IGNORAR.
+  // Esto es crucial para que la carpeta `dist` final no contenga archivos innecesarios.
+  // ⚠️ ERROR TRAMPA: Si el profesor elimina `"**/*spec.ts"` de aquí, tus archivos de prueba
+  // se incluirían en el build de producción, aumentando su tamaño innecesariamente.
+  "exclude": [
+    "node_modules", // Siempre excluir las dependencias.
+    "test",         // Excluir la carpeta de pruebas end-to-end.
+    "dist",         // Excluir la propia carpeta de salida para evitar bucles.
+    "**/*spec.ts"   // Excluir TODOS los archivos de prueba unitaria (los que terminan en .spec.ts).
+  ]
 }

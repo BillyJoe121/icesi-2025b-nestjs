@@ -1,7 +1,17 @@
+// ========================================================================================
+// ARCHIVO: test/jest-e2e.json
+// PROPÓSITO: Archivo de configuración específico para las pruebas End-to-End (E2E).
+//            Se usa con el comando `yarn run test:e2e`.
+// ========================================================================================
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".", // La raíz del proyecto.
   "testEnvironment": "node",
+  // A diferencia de las pruebas unitarias, busca archivos que terminen en `.e2e-spec.ts`.
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
